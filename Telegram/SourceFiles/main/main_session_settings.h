@@ -64,6 +64,31 @@ public:
 		return _supportAllSilent;
 	}
 
+	void setAllSilent(bool enabled) {
+		_allSilent = enabled;
+	}
+	[[nodiscard]] bool allSilent() const {
+		return _allSilent;
+	}
+	void setSpySaveDeleted(bool enabled) {
+		_spySaveDeleted = enabled;
+	}
+	[[nodiscard]] bool spySaveDeleted() const {
+		return _spySaveDeleted;
+	}
+	void setSpySaveEdits(bool enabled) {
+		_spySaveEdits = enabled;
+	}
+	[[nodiscard]] bool spySaveEdits() const {
+		return _spySaveEdits;
+	}
+	void setSpySaveInBotChats(bool enabled) {
+		_spySaveInBotChats = enabled;
+	}
+	[[nodiscard]] bool spySaveInBotChats() const {
+		return _spySaveInBotChats;
+	}
+
 	[[nodiscard]] ChatHelpers::SelectorTab selectorTab() const {
 		return _selectorTab;
 	}
@@ -219,6 +244,11 @@ private:
 	bool _supportFixChatsOrder = true;
 	bool _supportTemplatesAutocomplete = true;
 	bool _supportAllSilent = false;
+
+	bool _allSilent = false;
+	bool _spySaveDeleted = false;
+	bool _spySaveEdits = false;
+	bool _spySaveInBotChats = false;
 	rpl::variable<int> _supportChatsTimeSlice
 		= kDefaultSupportChatsLimitSlice;
 	rpl::variable<bool> _supportAllSearchResults = false;

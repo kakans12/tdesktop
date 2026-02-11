@@ -2067,6 +2067,23 @@ void HistoryItem::applyEdition(HistoryMessageEdition &&edition) {
 		setServiceText(std::move(serviceText));
 		addToSharedMediaIndex();
 	} else {
+		const auto &settings = history()->session().settings();
+		if (settings.spySaveEdits()) {
+			const auto peer = history()->peer;
+			if (!peer->isBot() || settings.spySaveInBotChats()) {
+				const auto oldText = originalText();
+				if (!oldText.text.isEmpty()
+					&& oldText.text != updatedText.text) {
+					const auto was = tr::lng_spy_edited_previous(
+						tr::now,
+						lt_text,
+						oldText.text);
+					updatedText.text = updatedText.text
+						+ u"\n\n"_q
+						+ was;
+				}
+			}
+		}
 		setText(std::move(updatedText));
 		addToSharedMediaIndex();
 	}

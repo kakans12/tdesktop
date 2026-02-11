@@ -67,7 +67,8 @@ QByteArray SessionSettings::serialize() const {
 	}
 	size += sizeof(qint32); // _setupEmailState
 	size += sizeof(qint32) // _moderateCommonGroups size
-		+ (_moderateCommonGroups.size() * sizeof(qint32));
+		+ (_moderateCommonGroups.size() * sizeof(qint32))
+		+ sizeof(qint32) * 4;
 
 	auto result = QByteArray();
 	result.reserve(size);
@@ -153,6 +154,11 @@ QByteArray SessionSettings::serialize() const {
 		for (const auto &filterId : _moderateCommonGroups) {
 			stream << qint32(filterId);
 		}
+		stream
+			<< qint32(_allSilent ? 1 : 0)
+			<< qint32(_spySaveDeleted ? 1 : 0)
+			<< qint32(_spySaveEdits ? 1 : 0)
+			<< qint32(_spySaveInBotChats ? 1 : 0);
 	}
 
 	Ensures(result.size() == size);
@@ -226,6 +232,10 @@ void SessionSettings::addFromSerialized(const QByteArray &serialized) {
 	std::vector<Data::UnreviewedAuth> unreviewed;
 	qint32 setupEmailState = 0;
 	std::vector<int32> moderateCommonGroups;
+	qint32 allSilent = 0;
+	qint32 spySaveDeleted = 0;
+	qint32 spySaveEdits = 0;
+	qint32 spySaveInBotChats = 0;
 
 	stream >> versionTag;
 	if (versionTag == kVersionTag) {
@@ -659,6 +669,13 @@ void SessionSettings::addFromSerialized(const QByteArray &serialized) {
 			}
 		}
 	}
+	if (!stream.atEnd()) {
+		stream
+			>> allSilent
+			>> spySaveDeleted
+			>> spySaveEdits
+			>> spySaveInBotChats;
+	}
 	if (stream.status() != QDataStream::Ok) {
 		LOG(("App Error: "
 			"Bad data for SessionSettings::addFromSerialized()"));
@@ -723,6 +740,10 @@ void SessionSettings::addFromSerialized(const QByteArray &serialized) {
 	}
 
 	_moderateCommonGroups = std::move(moderateCommonGroups);
+	_allSilent = (allSilent == 1);
+	_spySaveDeleted = (spySaveDeleted == 1);
+	_spySaveEdits = (spySaveEdits == 1);
+	_spySaveInBotChats = (spySaveInBotChats == 1);
 
 	if (version < 2) {
 		app.setLastSeenWarningSeen(appLastSeenWarningSeen == 1);

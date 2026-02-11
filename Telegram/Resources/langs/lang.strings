@@ -7590,4 +7590,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 "lng_mac_hold_to_quit" = "Hold {text} to Quit";
 
+"lng_settings_send_silent" = "Send without sound";
+"lng_settings_send_silent_about" = "Sends messages by default without sound.";
+"lng_settings_spy_title" = "Spy mode";
+"lng_settings_spy_save_deleted" = "Save deleted messages";
+"lng_settings_spy_save_edits" = "Save edit history";
+"lng_settings_spy_save_in_bots" = "Save in bot chats";
+"lng_spy_deleted_mark" = "[Deleted] {text}";
+"lng_spy_edited_previous" = "[Was]: {text}";
+
 // Keys finished

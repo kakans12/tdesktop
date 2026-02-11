@@ -607,6 +607,7 @@ bool ShouldSendSilent(
 		not_null<PeerData*> peer,
 		const Api::SendOptions &options) {
 	return options.silent
+		|| peer->session().settings().allSilent()
 		|| (peer->isBroadcast()
 			&& peer->owner().notifySettings().silentPosts(peer))
 		|| (peer->session().supportMode()
