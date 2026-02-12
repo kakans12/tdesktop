@@ -19,6 +19,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "mainwidget.h"
 #include "mainwindow.h"
 #include "main/main_session.h"
+#include "main/main_session_settings.h"
 #include "mtproto/mtproto_config.h"
 #include "lang/lang_keys.h"
 #include "core/shortcuts.h"
@@ -676,6 +677,23 @@ void TopBarWidget::paintTopBar(Painter &p) {
 			.availableWidth = namewidth,
 			.elisionLines = 1,
 		});
+
+		if (namePeer
+			&& _controller->session().settings().showDialogId()) {
+			const auto idText = u"ID: "_q
+				+ QString::number(namePeer->id.value & PeerId::kChatTypeMask);
+			const auto idWidth = st::dialogsTextFont->width(idText);
+			const auto titleWidth = std::min(
+				_title.maxWidth(),
+				namewidth);
+			const auto idLeft = nameleft + titleWidth
+				+ st::dialogsChatTypeSkip;
+			if (idLeft + idWidth <= nameleft + namewidth + badgeWidth) {
+				p.setPen(st::windowSubTextFg);
+				p.setFont(st::dialogsTextFont);
+				p.drawTextLeft(idLeft, nametop, width(), idText);
+			}
+		}
 
 		p.setFont(st::dialogsTextFont);
 		if (!paintConnectingState(p, statusleft, statustop, width())

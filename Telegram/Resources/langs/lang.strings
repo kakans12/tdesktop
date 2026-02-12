@@ -7590,13 +7590,37 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 "lng_mac_hold_to_quit" = "Hold {text} to Quit";
 
-"lng_settings_send_silent" = "Send without sound";
-"lng_settings_send_silent_about" = "Sends messages by default without sound.";
-"lng_settings_spy_title" = "Spy mode";
-"lng_settings_spy_save_deleted" = "Save deleted messages";
-"lng_settings_spy_save_edits" = "Save edit history";
-"lng_settings_spy_save_in_bots" = "Save in bot chats";
-"lng_spy_deleted_mark" = "[Deleted] {text}";
-"lng_spy_edited_previous" = "[Was]: {text}";
+"lng_settings_cypsways" = "CypsWays";
+
+"lng_settings_cw_ghost_title" = "Ghost Mode";
+"lng_settings_cw_ghost_toggle" = "Ghost Mode";
+"lng_settings_cw_ghost_about" = "Hide your online activity from other users.";
+"lng_settings_cw_ghost_no_read" = "Don't mark messages as read";
+"lng_settings_cw_ghost_no_online" = "Don't send online status";
+"lng_settings_cw_ghost_no_typing" = "Don't send typing status";
+"lng_settings_cw_ghost_no_stories" = "Don't mark stories as read";
+"lng_settings_cw_ghost_auto_offline" = "Automatic offline";
+"lng_settings_cw_ghost_read_on_action" = "Read on action";
+"lng_settings_cw_ghost_read_on_action_about" = "Automatically mark messages as read when you send a message or reaction.";
+
+"lng_settings_cw_spy_title" = "Spy Mode";
+"lng_settings_cw_spy_save_deleted" = "Save deleted messages";
+"lng_settings_cw_spy_save_edits" = "Save edit history";
+"lng_settings_cw_spy_save_onetime" = "Save one-time media";
+"lng_settings_cw_spy_save_in_bots" = "Save in bot chats";
+
+"lng_settings_cw_ui_title" = "Interface";
+"lng_settings_cw_send_silent" = "Send without sound";
+"lng_settings_cw_send_silent_about" = "Sends messages by default without sound.";
+"lng_settings_cw_show_seconds" = "Show seconds in timestamps";
+"lng_settings_cw_show_dialog_id" = "Show dialog ID";
+
+"lng_spy_deleted_mark" = "\xE2\x9B\x94 {text}";
+"lng_spy_edited_previous" = "\xF0\x9F\x93\x9D {text}";
+"lng_context_view_edit_history" = "View edit history";
+"lng_context_view_deleted" = "View deleted messages";
+"lng_spy_edit_history_title" = "Edit History";
+"lng_spy_deleted_title" = "Deleted Messages";
+"lng_spy_no_deleted" = "No deleted messages in this chat.";
 
 // Keys finished

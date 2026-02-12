@@ -1585,6 +1585,34 @@ void Filler::fillHistoryActions() {
 	addClearHistory();
 	addDeleteChat();
 	addLeaveChat();
+
+	if (_peer) {
+		const auto peer = _peer;
+		const auto controller = _controller;
+		const auto &deleted = peer->owner().deletedMessages(peer->id);
+		if (!deleted.empty()) {
+			_addAction(
+				tr::lng_context_view_deleted(tr::now),
+				[=] {
+					const auto &list = peer->owner().deletedMessages(peer->id);
+					auto text = QString();
+					for (auto i = list.size(); i > 0; --i) {
+						const auto &info = list[i - 1];
+						text += info.senderName
+							+ u": "_q
+							+ info.text
+							+ u"\n\n"_q;
+					}
+					if (text.isEmpty()) {
+						text = tr::lng_spy_no_deleted(tr::now);
+					} else {
+						text.chop(2);
+					}
+					controller->show(Ui::MakeInformBox(text));
+				},
+				&st::menuIconDelete);
+		}
+	}
 }
 
 void Filler::fillProfileActions() {

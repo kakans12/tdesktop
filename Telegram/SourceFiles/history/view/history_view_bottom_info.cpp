@@ -27,6 +27,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "chat_helpers/emoji_interactions.h"
 #include "core/click_handler_types.h"
 #include "main/main_session.h"
+#include "main/main_session_settings.h"
 #include "lottie/lottie_icon.h"
 #include "data/data_channel.h"
 #include "data/data_session.h"
@@ -446,8 +447,11 @@ void BottomInfo::layout() {
 }
 
 void BottomInfo::layoutDateText() {
-	const auto edited = (_data.flags & Data::Flag::Edited)
-		? (tr::lng_edited(tr::now) + ' ')
+	const auto spyDeleted = (_data.flags & Data::Flag::SpyDeleted);
+	const auto edited = spyDeleted
+		? (QString::fromUtf8("\xf0\x9f\x97\x91") + ' ')
+		: (_data.flags & Data::Flag::Edited)
+		? (QString::fromUtf8("\xe2\x9c\x8f") + ' ')
 		: (_data.flags & Data::Flag::EstimateDate)
 		? (tr::lng_approximate(tr::now) + ' ')
 		: _data.scheduleRepeatPeriod
@@ -455,9 +459,13 @@ void BottomInfo::layoutDateText() {
 		: QString();
 	const auto author = _data.author;
 	const auto prefix = !author.isEmpty() ? u", "_q : QString();
+	const auto showSec = _reactionsOwner->session().settings().showSeconds();
+	const auto timeFormat = showSec
+		? u"HH:mm:ss"_q
+		: QLocale().timeFormat(QLocale::ShortFormat);
 	const auto date = edited + ((_data.flags & Data::Flag::ForwardedDate)
 		? Ui::FormatDateTimeSavedFrom(_data.date)
-		: QLocale().toString(_data.date.time(), QLocale::ShortFormat));
+		: _data.date.time().toString(timeFormat));
 	const auto afterAuthor = prefix + date;
 	const auto afterAuthorWidth = st::msgDateFont->width(afterAuthor);
 	const auto authorWidth = st::msgDateFont->width(author);
@@ -637,6 +645,9 @@ BottomInfo::Data BottomInfoDataFromMessage(not_null<Message*> message) {
 	}
 	if (message->displayedEditDate()) {
 		result.flags |= Flag::Edited;
+	}
+	if (item->isSpyDeleted()) {
+		result.flags |= Flag::SpyDeleted;
 	}
 	if (const auto views = item->Get<HistoryMessageViews>()) {
 		if (views->views.count >= 0) {

@@ -1360,6 +1360,10 @@ void ApiWrap::markContentsRead(
 }
 
 void ApiWrap::markContentsRead(not_null<HistoryItem*> item) {
+	if (_session->settings().spySaveOnetime()
+		&& item->hasUnreadMediaFlag()) {
+		return;
+	}
 	if (!item->markContentsRead(true) || !item->isRegular()) {
 		return;
 	}

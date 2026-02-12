@@ -68,7 +68,7 @@ QByteArray SessionSettings::serialize() const {
 	size += sizeof(qint32); // _setupEmailState
 	size += sizeof(qint32) // _moderateCommonGroups size
 		+ (_moderateCommonGroups.size() * sizeof(qint32))
-		+ sizeof(qint32) * 4;
+		+ sizeof(qint32) * 14;
 
 	auto result = QByteArray();
 	result.reserve(size);
@@ -158,7 +158,17 @@ QByteArray SessionSettings::serialize() const {
 			<< qint32(_allSilent ? 1 : 0)
 			<< qint32(_spySaveDeleted ? 1 : 0)
 			<< qint32(_spySaveEdits ? 1 : 0)
-			<< qint32(_spySaveInBotChats ? 1 : 0);
+			<< qint32(_spySaveInBotChats ? 1 : 0)
+			<< qint32(_spySaveOnetime ? 1 : 0)
+			<< qint32(_ghostMode ? 1 : 0)
+			<< qint32(_ghostNoRead ? 1 : 0)
+			<< qint32(_ghostNoOnline ? 1 : 0)
+			<< qint32(_ghostNoTyping ? 1 : 0)
+			<< qint32(_ghostNoStories ? 1 : 0)
+			<< qint32(_ghostAutoOffline ? 1 : 0)
+			<< qint32(_ghostReadOnAction ? 1 : 0)
+			<< qint32(_showSeconds ? 1 : 0)
+			<< qint32(_showDialogId ? 1 : 0);
 	}
 
 	Ensures(result.size() == size);
@@ -236,6 +246,16 @@ void SessionSettings::addFromSerialized(const QByteArray &serialized) {
 	qint32 spySaveDeleted = 0;
 	qint32 spySaveEdits = 0;
 	qint32 spySaveInBotChats = 0;
+	qint32 spySaveOnetime = 0;
+	qint32 ghostMode = 0;
+	qint32 ghostNoRead = 0;
+	qint32 ghostNoOnline = 0;
+	qint32 ghostNoTyping = 0;
+	qint32 ghostNoStories = 0;
+	qint32 ghostAutoOffline = 0;
+	qint32 ghostReadOnAction = 0;
+	qint32 showSeconds = 0;
+	qint32 showDialogId = 0;
 
 	stream >> versionTag;
 	if (versionTag == kVersionTag) {
@@ -674,7 +694,17 @@ void SessionSettings::addFromSerialized(const QByteArray &serialized) {
 			>> allSilent
 			>> spySaveDeleted
 			>> spySaveEdits
-			>> spySaveInBotChats;
+			>> spySaveInBotChats
+			>> spySaveOnetime
+			>> ghostMode
+			>> ghostNoRead
+			>> ghostNoOnline
+			>> ghostNoTyping
+			>> ghostNoStories
+			>> ghostAutoOffline
+			>> ghostReadOnAction
+			>> showSeconds
+			>> showDialogId;
 	}
 	if (stream.status() != QDataStream::Ok) {
 		LOG(("App Error: "
@@ -744,6 +774,16 @@ void SessionSettings::addFromSerialized(const QByteArray &serialized) {
 	_spySaveDeleted = (spySaveDeleted == 1);
 	_spySaveEdits = (spySaveEdits == 1);
 	_spySaveInBotChats = (spySaveInBotChats == 1);
+	_spySaveOnetime = (spySaveOnetime == 1);
+	_ghostMode = (ghostMode == 1);
+	_ghostNoRead = (ghostNoRead == 1);
+	_ghostNoOnline = (ghostNoOnline == 1);
+	_ghostNoTyping = (ghostNoTyping == 1);
+	_ghostNoStories = (ghostNoStories == 1);
+	_ghostAutoOffline = (ghostAutoOffline == 1);
+	_ghostReadOnAction = (ghostReadOnAction == 1);
+	_showSeconds = (showSeconds == 1);
+	_showDialogId = (showDialogId == 1);
 
 	if (version < 2) {
 		app.setLastSeenWarningSeen(appLastSeenWarningSeen == 1);

@@ -2074,13 +2074,7 @@ void HistoryItem::applyEdition(HistoryMessageEdition &&edition) {
 				const auto oldText = originalText();
 				if (!oldText.text.isEmpty()
 					&& oldText.text != updatedText.text) {
-					const auto was = tr::lng_spy_edited_previous(
-						tr::now,
-						lt_text,
-						oldText.text);
-					updatedText.text = updatedText.text
-						+ u"\n\n"_q
-						+ was;
+					_editHistory.push_back(oldText);
 				}
 			}
 		}
@@ -3303,6 +3297,10 @@ MsgId HistoryItem::originalId() const {
 const TextWithEntities &HistoryItem::originalText() const {
 	static const auto kEmpty = TextWithEntities();
 	return isService() ? kEmpty : _text;
+}
+
+const std::vector<TextWithEntities> &HistoryItem::editHistory() const {
+	return _editHistory;
 }
 
 const TextWithEntities &HistoryItem::translatedText() const {

@@ -544,6 +544,15 @@ public:
 		PeerId peerId,
 		const QVector<MTPint> &data);
 
+	struct DeletedMessageInfo {
+		QString text;
+		QString senderName;
+		TimeId date = 0;
+	};
+	void addDeletedMessage(PeerId peerId, DeletedMessageInfo info);
+	[[nodiscard]] const std::vector<DeletedMessageInfo> &deletedMessages(
+		PeerId peerId) const;
+
 	[[nodiscard]] MsgId nextLocalMessageId();
 	[[nodiscard]] HistoryItem *message(
 		PeerId peerId,
@@ -1316,6 +1325,8 @@ private:
 
 	rpl::event_stream<RecentSelfForwards> _recentSelfForwards;
 	rpl::event_stream<RecentJoinChat> _recentJoinChat;
+
+	std::unordered_map<PeerId, std::vector<DeletedMessageInfo>> _deletedMessages;
 
 	rpl::lifetime _lifetime;
 

@@ -1385,6 +1385,27 @@ base::unique_qptr<Ui::PopupMenu> FillContextMenu(
 		}
 	}
 
+	if (item && !item->editHistory().empty()) {
+		const auto owner = &item->history()->owner();
+		result->addAction(tr::lng_context_view_edit_history(tr::now), [=] {
+			if (const auto item = owner->message(itemId)) {
+				auto text = QString();
+				const auto &edits = item->editHistory();
+				for (auto i = edits.size(); i > 0; --i) {
+					text += tr::lng_spy_edited_previous(
+						tr::now,
+						lt_text,
+						edits[i - 1].text);
+					text += u"\n\n"_q;
+				}
+				if (!text.isEmpty()) {
+					text.chop(2);
+				}
+				list->controller()->show(Ui::MakeInformBox(text));
+			}
+		}, &st::menuIconEdit);
+	}
+
 	AddCopyLinkAction(result, link);
 	AddMessageActions(result, request, list);
 

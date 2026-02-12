@@ -4841,6 +4841,10 @@ void HistoryWidget::send(Api::SendOptions options) {
 	session().api().sendMessage(std::move(message), nextLocalMessageId);
 	_justMarkingAsRead = false;
 
+	if (session().settings().ghostReadOnAction() && _history) {
+		session().data().histories().readInbox(_history);
+	}
+
 	clearFieldText();
 	if (_preview) {
 		_preview->apply({ .removed = true });

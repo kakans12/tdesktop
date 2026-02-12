@@ -248,6 +248,12 @@ public:
 	[[nodiscard]] bool isPinned() const {
 		return _flags & MessageFlag::Pinned;
 	}
+	[[nodiscard]] bool isSpyDeleted() const {
+		return _flags & MessageFlag::SpyDeleted;
+	}
+	void setSpyDeleted() {
+		_flags |= MessageFlag::SpyDeleted;
+	}
 	[[nodiscard]] bool invertMedia() const {
 		return _flags & MessageFlag::InvertMedia;
 	}
@@ -418,6 +424,7 @@ public:
 	[[nodiscard]] ItemPreview toPreview(ToPreviewOptions options) const;
 	[[nodiscard]] TextWithEntities inReplyText() const;
 	[[nodiscard]] const TextWithEntities &originalText() const;
+	[[nodiscard]] const std::vector<TextWithEntities> &editHistory() const;
 	[[nodiscard]] const TextWithEntities &translatedText() const;
 	[[nodiscard]] TextWithEntities translatedTextWithLocalEntities() const;
 	[[nodiscard]] const std::vector<ClickHandlerPtr> &customTextLinks() const;
@@ -725,6 +732,7 @@ private:
 	mutable MessageFlags _flags = 0;
 
 	TextWithEntities _text;
+	std::vector<TextWithEntities> _editHistory;
 
 	std::unique_ptr<Data::Media> _media;
 	std::unique_ptr<Data::MessageReactions> _reactions;

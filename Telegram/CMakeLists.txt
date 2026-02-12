@@ -1560,6 +1560,8 @@ PRIVATE
     settings/sections/settings_advanced.h
     settings/sections/settings_chat.cpp
     settings/sections/settings_chat.h
+    settings/sections/settings_cypsways.cpp
+    settings/sections/settings_cypsways.h
     settings/sections/settings_blocked_peers.cpp
     settings/sections/settings_blocked_peers.h
     settings/sections/settings_business.cpp

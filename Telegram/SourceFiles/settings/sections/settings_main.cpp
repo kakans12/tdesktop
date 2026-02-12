@@ -55,6 +55,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "settings/sections/settings_notifications.h"
 #include "settings/settings_power_saving.h"
 #include "settings/sections/settings_premium.h"
+#include "settings/sections/settings_cypsways.h"
 #include "settings/sections/settings_privacy_security.h"
 #include "settings/settings_scale_preview.h"
 #include "storage/localstorage.h"
@@ -394,6 +395,13 @@ void BuildSectionButtons(SectionBuilder &builder) {
 			.shown = std::move(shownProducer),
 		});
 	}
+
+	builder.addSectionButton({
+		.title = tr::lng_settings_cypsways(),
+		.targetSection = CypsWaysId(),
+		.icon = { &st::menuIconExperimental },
+		.keywords = { u"cypsways"_q, u"ghost"_q, u"spy"_q },
+	});
 
 	builder.addSectionButton({
 		.title = tr::lng_settings_advanced(),

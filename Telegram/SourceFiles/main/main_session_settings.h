@@ -88,6 +88,86 @@ public:
 	[[nodiscard]] bool spySaveInBotChats() const {
 		return _spySaveInBotChats;
 	}
+	void setSpySaveOnetime(bool enabled) {
+		_spySaveOnetime = enabled;
+	}
+	[[nodiscard]] bool spySaveOnetime() const {
+		return _spySaveOnetime;
+	}
+
+	void setGhostMode(bool enabled) {
+		_ghostMode = enabled;
+	}
+	[[nodiscard]] bool ghostMode() const {
+		return _ghostMode;
+	}
+	void setGhostNoRead(bool enabled) {
+		_ghostNoRead = enabled;
+	}
+	[[nodiscard]] bool ghostNoRead() const {
+		return _ghostMode && _ghostNoRead;
+	}
+	void setGhostNoOnline(bool enabled) {
+		_ghostNoOnline = enabled;
+	}
+	[[nodiscard]] bool ghostNoOnline() const {
+		return _ghostMode && _ghostNoOnline;
+	}
+	void setGhostNoTyping(bool enabled) {
+		_ghostNoTyping = enabled;
+	}
+	[[nodiscard]] bool ghostNoTyping() const {
+		return _ghostMode && _ghostNoTyping;
+	}
+	void setGhostNoStories(bool enabled) {
+		_ghostNoStories = enabled;
+	}
+	[[nodiscard]] bool ghostNoStories() const {
+		return _ghostMode && _ghostNoStories;
+	}
+	void setGhostAutoOffline(bool enabled) {
+		_ghostAutoOffline = enabled;
+	}
+	[[nodiscard]] bool ghostAutoOffline() const {
+		return _ghostMode && _ghostAutoOffline;
+	}
+	void setGhostReadOnAction(bool enabled) {
+		_ghostReadOnAction = enabled;
+	}
+	[[nodiscard]] bool ghostReadOnAction() const {
+		return _ghostMode && _ghostReadOnAction;
+	}
+	[[nodiscard]] bool ghostNoReadRaw() const {
+		return _ghostNoRead;
+	}
+	[[nodiscard]] bool ghostNoOnlineRaw() const {
+		return _ghostNoOnline;
+	}
+	[[nodiscard]] bool ghostNoTypingRaw() const {
+		return _ghostNoTyping;
+	}
+	[[nodiscard]] bool ghostNoStoriesRaw() const {
+		return _ghostNoStories;
+	}
+	[[nodiscard]] bool ghostAutoOfflineRaw() const {
+		return _ghostAutoOffline;
+	}
+	[[nodiscard]] bool ghostReadOnActionRaw() const {
+		return _ghostReadOnAction;
+	}
+
+	void setShowSeconds(bool enabled) {
+		_showSeconds = enabled;
+	}
+	[[nodiscard]] bool showSeconds() const {
+		return _showSeconds;
+	}
+	void setShowDialogId(bool enabled) {
+		_showDialogId = enabled;
+	}
+	[[nodiscard]] bool showDialogId() const {
+		return _showDialogId;
+	}
 
 	[[nodiscard]] ChatHelpers::SelectorTab selectorTab() const {
 		return _selectorTab;
@@ -249,6 +329,18 @@ private:
 	bool _spySaveDeleted = false;
 	bool _spySaveEdits = false;
 	bool _spySaveInBotChats = false;
+	bool _spySaveOnetime = false;
+
+	bool _ghostMode = false;
+	bool _ghostNoRead = false;
+	bool _ghostNoOnline = false;
+	bool _ghostNoTyping = false;
+	bool _ghostNoStories = false;
+	bool _ghostAutoOffline = false;
+	bool _ghostReadOnAction = false;
+
+	bool _showSeconds = false;
+	bool _showDialogId = false;
 	rpl::variable<int> _supportChatsTimeSlice
 		= kDefaultSupportChatsLimitSlice;
 	rpl::variable<bool> _supportAllSearchResults = false;

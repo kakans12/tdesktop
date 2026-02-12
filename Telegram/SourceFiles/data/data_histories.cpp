@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "data/data_histories.h"
 
+#include "main/main_session_settings.h"
 #include "api/api_text_entities.h"
 #include "data/business/data_shortcut_messages.h"
 #include "data/components/scheduled_messages.h"
@@ -693,6 +694,12 @@ void Histories::sendReadRequests() {
 
 void Histories::sendReadRequest(not_null<History*> history, State &state) {
 	Expects(state.willReadTill > state.sentReadTill);
+
+	if (history->session().settings().ghostNoRead()) {
+		state.willReadTill = 0;
+		state.willReadWhen = 0;
+		return;
+	}
 
 	const auto tillId = state.sentReadTill = base::take(state.willReadTill);
 	state.willReadWhen = 0;

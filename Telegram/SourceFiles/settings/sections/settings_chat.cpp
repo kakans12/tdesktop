@@ -1259,80 +1259,6 @@ void BuildSupportSection(SectionBuilder &builder) {
 	builder.addSkip();
 }
 
-void BuildSpyModeSection(SectionBuilder &builder) {
-	const auto session = builder.session();
-	const auto controller = builder.controller();
-
-	builder.addSkip();
-
-	const auto silent = builder.addCheckbox({
-		.id = u"chat/all-silent"_q,
-		.title = tr::lng_settings_send_silent(),
-		.checked = session->settings().allSilent(),
-		.keywords = { u"silent"_q, u"sound"_q, u"mute"_q },
-	});
-	if (silent) {
-		silent->checkedChanges(
-		) | rpl::on_next([=](bool checked) {
-			controller->session().settings().setAllSilent(checked);
-			controller->session().saveSettingsDelayed();
-		}, silent->lifetime());
-	}
-
-	builder.addDividerText(tr::lng_settings_send_silent_about());
-
-	builder.addSubsectionTitle({
-		.id = u"chat/spy-mode"_q,
-		.title = tr::lng_settings_spy_title(),
-		.keywords = { u"spy"_q },
-	});
-	builder.addSkip(st::settingsSendTypeSkip);
-
-	const auto saveDeleted = builder.addCheckbox({
-		.id = u"chat/spy-save-deleted"_q,
-		.title = tr::lng_settings_spy_save_deleted(),
-		.checked = session->settings().spySaveDeleted(),
-		.keywords = { u"spy"_q, u"deleted"_q, u"save"_q },
-	});
-	if (saveDeleted) {
-		saveDeleted->checkedChanges(
-		) | rpl::on_next([=](bool checked) {
-			controller->session().settings().setSpySaveDeleted(checked);
-			controller->session().saveSettingsDelayed();
-		}, saveDeleted->lifetime());
-	}
-
-	const auto saveEdits = builder.addCheckbox({
-		.id = u"chat/spy-save-edits"_q,
-		.title = tr::lng_settings_spy_save_edits(),
-		.checked = session->settings().spySaveEdits(),
-		.keywords = { u"spy"_q, u"edit"_q, u"history"_q },
-	});
-	if (saveEdits) {
-		saveEdits->checkedChanges(
-		) | rpl::on_next([=](bool checked) {
-			controller->session().settings().setSpySaveEdits(checked);
-			controller->session().saveSettingsDelayed();
-		}, saveEdits->lifetime());
-	}
-
-	const auto saveInBots = builder.addCheckbox({
-		.id = u"chat/spy-save-in-bots"_q,
-		.title = tr::lng_settings_spy_save_in_bots(),
-		.checked = session->settings().spySaveInBotChats(),
-		.keywords = { u"spy"_q, u"bot"_q },
-	});
-	if (saveInBots) {
-		saveInBots->checkedChanges(
-		) | rpl::on_next([=](bool checked) {
-			controller->session().settings().setSpySaveInBotChats(checked);
-			controller->session().saveSettingsDelayed();
-		}, saveInBots->lifetime());
-	}
-
-	builder.addSkip(st::settingsCheckboxesSkip);
-}
-
 void BuildChatSectionContent(SectionBuilder &builder) {
 	BuildThemeOptionsSection(builder);
 	BuildThemeSettingsSection(builder);
@@ -1343,7 +1269,6 @@ void BuildChatSectionContent(SectionBuilder &builder) {
 	BuildMessagesSection(builder);
 	BuildSensitiveContentSection(builder);
 	BuildArchiveSection(builder);
-	BuildSpyModeSection(builder);
 	BuildSupportSection(builder);
 }
 

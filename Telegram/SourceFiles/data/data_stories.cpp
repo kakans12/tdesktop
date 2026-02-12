@@ -24,6 +24,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "lang/lang_keys.h"
 #include "main/main_app_config.h"
 #include "main/main_session.h"
+#include "main/main_session_settings.h"
 #include "ui/layers/show.h"
 #include "ui/text/text_utilities.h"
 
@@ -1387,6 +1388,9 @@ void Stories::toggleHidden(
 void Stories::sendMarkAsReadRequest(
 		not_null<PeerData*> peer,
 		StoryId tillId) {
+	if (_owner->session().settings().ghostNoStories()) {
+		return;
+	}
 	const auto peerId = peer->id;
 	_markReadRequests.emplace(peerId);
 	const auto finish = [=] {

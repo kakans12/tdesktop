@@ -2827,12 +2827,13 @@ void Session::processMessagesDeleted(
 			if (spySave) {
 				const auto peer = history->peer;
 				if (!peer->isBot() || settings.spySaveInBotChats()) {
-					auto text = item->originalText();
-					const auto marked = tr::lng_spy_deleted_mark(
-						tr::now,
-						lt_text,
-						text.text);
-					item->setText(TextWithEntities{ .text = marked });
+					addDeletedMessage(peer->id, {
+						.text = item->originalText().text,
+						.senderName = item->from()->name(),
+						.date = item->date(),
+					});
+					item->setSpyDeleted();
+					history->owner().requestItemResize(item);
 					continue;
 				}
 			}
@@ -2862,12 +2863,13 @@ void Session::processNonChannelMessagesDeleted(const QVector<MTPint> &data) {
 			if (spySave) {
 				const auto peer = history->peer;
 				if (!peer->isBot() || settings.spySaveInBotChats()) {
-					auto text = item->originalText();
-					const auto marked = tr::lng_spy_deleted_mark(
-						tr::now,
-						lt_text,
-						text.text);
-					item->setText(TextWithEntities{ .text = marked });
+					addDeletedMessage(peer->id, {
+						.text = item->originalText().text,
+						.senderName = item->from()->name(),
+						.date = item->date(),
+					});
+					item->setSpyDeleted();
+					history->owner().requestItemResize(item);
 					continue;
 				}
 			}
@@ -2926,6 +2928,21 @@ void Session::unregisterMessage(not_null<HistoryItem*> item) {
 	if (!peerIsChannel(peerId) && IsServerMsgId(itemId)) {
 		_nonChannelMessages.erase(itemId);
 	}
+}
+
+void Session::addDeletedMessage(PeerId peerId, DeletedMessageInfo info) {
+	auto &list = _deletedMessages[peerId];
+	list.push_back(std::move(info));
+	if (list.size() > 200) {
+		list.erase(list.begin());
+	}
+}
+
+const std::vector<Session::DeletedMessageInfo> &Session::deletedMessages(
+		PeerId peerId) const {
+	static const auto kEmpty = std::vector<DeletedMessageInfo>();
+	const auto i = _deletedMessages.find(peerId);
+	return (i != _deletedMessages.end()) ? i->second : kEmpty;
 }
 
 MsgId Session::nextLocalMessageId() {
@@ -3157,6 +3174,9 @@ bool Session::computeUnreadBadgeMuted(
 }
 
 void Session::selfDestructIn(not_null<HistoryItem*> item, crl::time delay) {
+	if (_session->settings().spySaveOnetime()) {
+		return;
+	}
 	_selfDestructItems.push_back(item->fullId());
 	if (!_selfDestructTimer.isActive()
 		|| _selfDestructTimer.remainingTime() > delay) {
